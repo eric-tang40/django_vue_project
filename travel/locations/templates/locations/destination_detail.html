@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<a href="{% url 'locations:destination_list' %}">Destinations List</a><br/><br/>
+<a href="{% url 'locations:destination_update' object.id %}">Update Destination</a><br/>
+<a href="{% url 'locations:destination_delete' object.id %}">Delete Destination</a><br/>
+<h1>{{ object.name }}</h1>
+<p>{{ object.country }}</p>
+<p>{{ object.description }}</p>
+{% endblock content %}

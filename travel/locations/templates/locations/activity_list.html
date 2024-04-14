@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+<a href="{% url 'locations:activity_create' %}">New Activity</a><br/><br/>
+{% for activity in object_list %}
+    <a href="{% url 'locations:activity_detail' activity.id %}">{{ activity.name }}</a> - {{ activity.price }}<br/>
+{% endfor %}
+{% endblock content %}

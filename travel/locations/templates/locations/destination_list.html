@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+<a href="{% url 'locations:destination_create' %}">New Destination</a><br/><br/>
+{% for destination in object_list %}
+    <a href="{% url 'locations:destination_detail' destination.id %}">{{ destination.name }}</a> - {{ destination.country }}<br/>
+{% endfor %}
+{% endblock content %}
