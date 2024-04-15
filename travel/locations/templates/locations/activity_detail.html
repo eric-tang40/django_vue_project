@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<a href="{% url 'locations:activity_list' %}">Activities List</a><br/>
+<a href="{% url 'locations:activity_update' object.id %}">Update Activity</a><br/>
+<a href="{% url 'locations:activity_delete' object.id %}">Delete Activity</a><br/>
+<h1>{{ object.name }}</h1>
+<p>Price: {{ object.price }}</p>
+<p>Located in: {{ object.destination.name }}, {{ object.destination.country }}</p>
+{% endblock content %}

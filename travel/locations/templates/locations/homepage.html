@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center">Explore the World with Our Travel App!</h1>
+            <p class="text-center">Discover destinations, find accommodations, and do exciting activities.</p>
+        </div>
+    </div>
+    <div class="row mt-4 justify-content-center">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Destinations</h5>
+                    <p class="card-text">Explore cities, countryside, and exotic locations worldwide. Find your perfect getaway!</p>
+                    <a href="{% url 'locations:destination_list' %}" class="btn btn-primary">Explore Destinations</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Accommodations</h5>
+                    <p class="card-text">From luxury hotels to cozy apartments, find the perfect place to stay during your travels.</p>
+                    <a href="{% url 'locations:accommodation_list' %}" class="btn btn-primary">Find Accommodations</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Activities</h5>
+                    <p class="card-text">Get the best out of your travel with activities that make your journey unforgettable.</p>
+                    <a href="{% url 'locations:activity_list' %}" class="btn btn-primary">Join Activities</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

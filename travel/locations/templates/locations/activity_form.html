@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load django_vite %}
+
+{% block content %}
+<br><br>
+<div id="app">
+    <app></app>
+</div>
+{% endblock content %}
+
+{% block js %}
+  {{ block.super }}
+  <script>
+       var ext_csrf_token = '{{ csrf_token }}';
+       var ext_activity_dict = {{ activity_dict | safe }};
+       var ext_destinations = {{ destinations | safe }};
+  </script>
+  {% vite_hmr_client %}
+  {% vite_asset 'src/apps/activity_edit/activity_edit.js' %}
+{% endblock js %}

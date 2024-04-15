@@ -9,9 +9,9 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
 import os
 import json
+
 from pathlib import Path
 
 from django.core.exceptions import ImproperlyConfigured
@@ -30,10 +30,8 @@ def get_secret(setting, secrets=secrets):
         return secrets[setting]
     except KeyError:
         error_msg = 'Set the {0} environment variable'.format(setting)
-        # raise ImproperlyConfigured(error_msg)
-
-
-
+        raise ImproperlyConfigured(error_msg)
+        
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -94,10 +92,15 @@ WSGI_APPLICATION = 'travel.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": get_secret('database_name'),
+        "USER": get_secret('database_user'),
+        "PASSWORD": get_secret('database_pwd'),
+        "HOST": get_secret('database_host'),
+        "PORT": get_secret('database_port'),
     }
 }
 
@@ -137,6 +140,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "locations/static",  
+    BASE_DIR / "travel/static",
+    BASE_DIR / "core/static",
+]
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "movie_theater_static")
 
 # Default primary key field type
@@ -144,11 +152,15 @@ STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "movie_theater_static")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = "/locations/locations/"
-LOGOUT_REDIRECT_URL = "/"
+GRAPH_MODELS = {
+ 'all_applications': True,
+ 'group_models': True,
+}
 
+LOGIN_REDIRECT_URL = "/locations"
+LOGOUT_REDIRECT_URL = "/locations"
 
-DJANGO_VITE_ASSETS_PATH = os.path.join(BASE_DIR, "core", "static", "vite") 
+DJANGO_VITE_ASSETS_PATH = os.path.join(BASE_DIR, "core", "static", "vite")
 DJANGO_VITE_DEV_SERVER_PORT = get_secret("vite_dev_server_port")
 DJANGO_VITE_STATIC_URL_PREFIX = "vite/"
 DJANGO_VITE_DEV_MODE = True # This line has to be removed in production
