@@ -140,6 +140,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "locations/static",  
+    BASE_DIR / "travel/static",
+    BASE_DIR / "core/static",
+]
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "movie_theater_static")
 
 # Default primary key field type
@@ -152,8 +157,8 @@ GRAPH_MODELS = {
  'group_models': True,
 }
 
-LOGIN_REDIRECT_URL = "/locations/locations/"
-LOGOUT_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/locations"
+LOGOUT_REDIRECT_URL = "/locations"
 
 DJANGO_VITE_ASSETS_PATH = os.path.join(BASE_DIR, "core", "static", "vite")
 DJANGO_VITE_DEV_SERVER_PORT = get_secret("vite_dev_server_port")

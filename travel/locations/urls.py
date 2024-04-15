@@ -2,9 +2,10 @@ from django.urls import path
 
 from . import views
 
-app_name = "locations"
+app_name = 'locations'
 
 urlpatterns = [
+    path('', views.homepage, name='homepage'),
     path("locations/", views.DestinationListView.as_view(), name="destination_list"),
     path("locations/<int:pk>/", views.DestinationDetailView.as_view(), name="destination_detail"),
     path("locations/new/", views.DestinationCreateView.as_view(), name="destination_create"),

@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Destination, Accommodation, Activity
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,6 +8,9 @@ from django.forms.models import model_to_dict
 from .forms import DestinationForm, AccommodationForm, ActivityForm
 
 # Destinations
+
+def homepage(request):
+    return render(request, 'locations/homepage.html')
 
 class DestinationListView(LoginRequiredMixin, ListView):
     model = Destination
