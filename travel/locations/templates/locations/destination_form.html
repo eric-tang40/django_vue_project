@@ -2,10 +2,6 @@
 {% load django_vite %}
 
 {% block content %}
-<form method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Save">
-</form>
 <br><br>
 <div id="app">
     <app></app>

@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Destination, Accommodation, Activity
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms.models import model_to_dict
-from .forms import DestinationForm
+from .forms import DestinationForm, AccommodationForm, ActivityForm
 
 # Destinations
 
@@ -16,7 +16,19 @@ class DestinationDetailView(DetailView):
 
 class DestinationCreateView(CreateView):
     model = Destination
-    form_class = DestinationForm
+    fields = ['name', 'country', 'description']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        destination_dict = {
+            'name': '',
+            'country': '',
+            'description': '',
+        }
+        context['destination_dict'] = destination_dict
+        context['activities'] = []
+        context['accommodations'] = []
+        return context
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -31,7 +43,6 @@ class DestinationCreateView(CreateView):
 class DestinationUpdateView(UpdateView):
     model = Destination
     form_class = DestinationForm
-    template_name = 'destinations/destination_form.html'
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -57,7 +68,7 @@ class DestinationUpdateView(UpdateView):
         return context
 
     def get_success_url(self):
-        return reverse_lazy('locations:destination_detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy('locations:destination_detail', args=[self.object.id])
 
 class DestinationDeleteView(DeleteView):
     model = Destination
@@ -81,6 +92,19 @@ class AccommodationCreateView(CreateView):
     model = Accommodation
     fields = ['name', 'destination', 'price_per_night']
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        accommodation_dict = {
+            'name': '',
+            'price_per_night': '0.00',
+            'destination': '',
+            'destination_name': '',
+            'country': '',
+        }
+        context['accommodation_dict'] = accommodation_dict
+        context['destinations'] = list(Destination.objects.all().values('id', 'name'))
+        return context
+
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.add_message(self.request, messages.SUCCESS,
@@ -92,16 +116,35 @@ class AccommodationCreateView(CreateView):
 
 class AccommodationUpdateView(UpdateView):
     model = Accommodation
-    fields = ['name', 'destination', 'price_per_night']
+    form_class = AccommodationForm
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.add_message(self.request, messages.SUCCESS,
-                             f'Accommodation "{self.object.name}" has been updated.')
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            f'Accommodation "{self.object.name}" has been updated.'
+        )
         return response
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        accommodation = self.object
+        accommodation_dict = model_to_dict(accommodation)
+
+        accommodation_dict['price_per_night'] = str(accommodation.price_per_night)
+        accommodation_dict['destination'] = accommodation.destination.id
+        accommodation_dict['destination_name'] = accommodation.destination.name
+        accommodation_dict['country'] = accommodation.destination.country.upper()
+
+        context['accommodation_dict'] = accommodation_dict
+        context['destinations'] = list(Destination.objects.all().values('id', 'name'))
+
+        return context
 
     def get_success_url(self):
         return reverse_lazy('locations:accommodation_detail', args=[self.object.id])
+
 
 class AccommodationDeleteView(DeleteView):
     model = Accommodation
@@ -123,7 +166,21 @@ class ActivityDetailView(DetailView):
 
 class ActivityCreateView(CreateView):
     model = Activity
-    fields = ['name', 'destination', 'price']
+    form_class = ActivityForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        activity_dict = {
+            'name': '',
+            'price': '0.00',
+            'destination': '',
+        }
+        
+        context['activity_dict'] = activity_dict
+        context['destinations'] = list(Destination.objects.all().values('id', 'name'))
+        
+        return context
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -131,18 +188,39 @@ class ActivityCreateView(CreateView):
                              f'Activity "{self.object.name}" has been created.')
         return response
 
+    def get_success_url(self):
+        return reverse_lazy('locations:activity_detail', args=[self.object.id])
+
 class ActivityUpdateView(UpdateView):
     model = Activity
-    fields = ['name', 'destination', 'price']
-    
+    form_class = ActivityForm
+
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.add_message(self.request, messages.SUCCESS,
-                             f'Activity "{self.object.name}" has been successfully updated.')
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            f'Activity "{self.object.name}" has been updated.'
+        )
         return response
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        activity = self.object
+        activity_dict = model_to_dict(activity)
+
+        activity_dict['price'] = str(activity.price)
+        activity_dict['destination'] = activity.destination.id
+        activity_dict['destination_name'] = activity.destination.name
+        activity_dict['country'] = activity.destination.country.upper()
+
+        context['activity_dict'] = activity_dict
+        context['destinations'] = list(Destination.objects.all().values('id', 'name'))
+
+        return context
+
     def get_success_url(self):
-        return reverse_lazy('locations:activity_detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy('locations:activity_detail', args=[self.object.id])
 
 class ActivityDeleteView(DeleteView):
     model = Activity

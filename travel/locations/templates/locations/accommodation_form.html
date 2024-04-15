@@ -1,8 +1,19 @@
 {% extends "base.html" %}
+{% load django_vite %}
 
 {% block content %}
-<form method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Submit">
-</form>
-{% endblock %}
+<br><br>
+<div id="app">
+</div>
+{% endblock content %}
+
+{% block js %}
+  {{ block.super }}
+  <script>
+       var ext_csrf_token = '{{ csrf_token }}';
+       var ext_accommodation_dict = {{ accommodation_dict | safe }};
+       var ext_destinations = {{ destinations | safe }};
+  </script>
+  {% vite_hmr_client %}
+  {% vite_asset 'src/apps/accommodation_edit/accommodation_edit.js' %}
+{% endblock js %}
