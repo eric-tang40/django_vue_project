@@ -106,7 +106,7 @@ class AccommodationCreateView(CreateView):
             'country': '',
         }
         context['accommodation_dict'] = accommodation_dict
-        context['destinations'] = list(Destination.objects.all().values('id', 'name'))
+        context['destinations'] = list(Destination.objects.all().values('id', 'name','country'))
         return context
 
     def form_valid(self, form):
