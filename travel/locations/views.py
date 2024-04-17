@@ -182,7 +182,7 @@ class ActivityCreateView(CreateView):
         }
         
         context['activity_dict'] = activity_dict
-        context['destinations'] = list(Destination.objects.all().values('id', 'name'))
+        context['destinations'] = list(Destination.objects.all().values('id', 'name', 'country'))
         
         return context
 

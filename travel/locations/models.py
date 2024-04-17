@@ -16,7 +16,7 @@ class Destination(models.Model):
 class Accommodation(models.Model):
     name = models.CharField(max_length=200)
     destination = models.ForeignKey(Destination, on_delete=models.CASCADE)
-    price_per_night = models.DecimalField(max_digits=6, decimal_places=2)
+    price_per_night = models.DecimalField(max_digits=8, decimal_places=2)
 
     class Meta:
         ordering = ['name']

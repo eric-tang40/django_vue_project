@@ -12,32 +12,26 @@
         <input type="number" name="price_per_night" v-model="accommodation_dico.price_per_night" min="0" required id="id_price_per_night">
       </p>
       <p>
-        <!-- <label for="id_destination">Countries:</label>
-        <select name="destination" v-model="accommodation_dico.destination" id="id_destination" required>
-          <option v-for="destination in destinations" :value="destination.id">
-            {{ destination.country }}
-          </option>
-        </select> -->
         <div class="cascading-dropdown">
           <div class="dropdown">
-            <span>Countries: </span>
-            <select v-model="selected">
+            <label for="id_destination">Countries:</label>
+            <select v-model="selected" id="id_destination" required>
               <option value="">Select a Country</option>
-              <option v-for="destination in destinations" :value="destination.id">
-                  {{ destination.country }}
-                </option>
+              <option v-for="country in countries">
+                  {{ country }}
+              </option>
             </select>
           </div>
           <div class="dropdown">
             <span>Destinations: </span>
-            <select :disabled="!selected" v-model="accommodation_dico.destination">
+            <select :disabled="!selected" v-model="boom" id="id_destination" required>
               <option value="">Select a Destination</option>
-              <option v-for="destination in new_destinations" :value="destination.id">
+              <option v-for="destination in new_destinations" :value="destination">
                   {{ destination }}
                 </option>
             </select>
           </div>
-        </div>
+        </div> 
       </p>
       <button type="submit" class="btn btn-primary" :disabled="submitting_form">Submit</button>
     </form>
@@ -46,14 +40,17 @@
 </template>
 
 <script>
-import VueMultiselect from 'vue-multiselect'
 export default {
   name: 'AccommodationEdit',
-  components: { VueMultiselect },
+  mounted() {
+    this.populateCountries();
+  },
   data() {
     return {
       selected: '',
+      boom:'',
       new_destinations: [],
+      countries: [],
       csrf_token: ext_csrf_token,
       accommodation_dico: ext_accommodation_dict,
       destinations: ext_destinations,
@@ -61,6 +58,16 @@ export default {
     };
   },
   methods: {
+    populateCountries() {
+      const mySet = new Set(); 
+      this.destinations.forEach(destination => {
+        if (!mySet.has(destination.country)) {
+          mySet.add(destination.country);
+          this.countries.push(destination.country);
+        }
+      });
+      return this.countries;
+    },
     submit_form(){
       this.submitting_form = true;
       var form = document.createElement('form');
@@ -70,7 +77,7 @@ export default {
         'name': this.accommodation_dico.name,
         'country': this.accommodation_dico.country,
         'price_per_night': this.accommodation_dico.price_per_night,
-        'destination': this.accommodation_dico.destination,
+        'destination': this.boom,
       };
       for (let key in form_data) {
         let html_field = document.createElement('input');
@@ -86,13 +93,18 @@ export default {
   watch: {
     selected(newVal) {
       this.new_destinations = [];
-      if (newVal > 0) {
-        const matchedDestinations = this.destinations.filter(destination => destination.id === newVal);
-        matchedDestinations.forEach(destination => {
-        this.new_destinations.push(destination.name);
-          }
-      );
-      }
+      this.destinations.forEach(destination => {
+        if (destination.country === newVal) {
+          this.new_destinations.push(destination.name);
+        }
+      });
+    },
+    boom(newVal) {
+      this.destinations.forEach(destination => {
+        if (newVal === destination.name) {
+          this.boom = destination.id;
+        }
+      });
     }
   },
 }
