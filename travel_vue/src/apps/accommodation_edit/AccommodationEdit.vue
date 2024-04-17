@@ -9,7 +9,7 @@
       </p>
       <p>
         <label for="id_price_per_night">Price Per Night:</label>
-        <input type="number" name="price_per_night" v-model="accommodation_dico.price_per_night" min="0" required id="id_price_per_night">
+        <input type="number" name="price_per_night" v-model="accommodation_dico.price_per_night" min="0" step="0.01" required id="id_price">
       </p>
       <p>
         <div class="cascading-dropdown">
@@ -26,7 +26,7 @@
             <span>Destinations: </span>
             <select :disabled="!selected" v-model="boom" id="id_destination" required>
               <option value="">Select a Destination</option>
-              <option v-for="destination in new_destinations" :value="destination">
+              <option v-for="destination in new_destinations">
                   {{ destination }}
                 </option>
             </select>
@@ -58,13 +58,33 @@ export default {
     };
   },
   methods: {
+    findCountry() {
+      var destinationName = this.accommodation_dico.destination_name;
+      for (const destination of this.destinations) {
+          if (destinationName === destination.name) {
+            return destination.country;
+          }
+      }
+    },
+    findDest() {
+      var country = this.selected;
+      for (const destination of this.destinations) {
+          if (country === destination.country) {
+            console.log(destination.name);
+            return destination.name;
+          }
+      }
+    },
     populateCountries() {
+      this.selected = this.findCountry();
+      this.boom = this.findDest();
       const mySet = new Set(); 
       this.destinations.forEach(destination => {
-        if (!mySet.has(destination.country)) {
-          mySet.add(destination.country);
-          this.countries.push(destination.country);
-        }
+          const countryLowerCase = destination.country.toLowerCase();
+          if (!mySet.has(countryLowerCase)) {
+              mySet.add(countryLowerCase);
+              this.countries.push(destination.country);
+          }
       });
       return this.countries;
     },
@@ -72,6 +92,11 @@ export default {
       this.submitting_form = true;
       var form = document.createElement('form');
       form.setAttribute('method', 'post');
+      this.destinations.forEach(destination => {
+        if (this.boom === destination.name) {
+          this.boom = destination.id;
+        }
+      });
       let form_data = {
         'csrfmiddlewaretoken': this.csrf_token,
         'name': this.accommodation_dico.name,
@@ -99,13 +124,6 @@ export default {
         }
       });
     },
-    boom(newVal) {
-      this.destinations.forEach(destination => {
-        if (newVal === destination.name) {
-          this.boom = destination.id;
-        }
-      });
-    }
   },
 }
 </script>

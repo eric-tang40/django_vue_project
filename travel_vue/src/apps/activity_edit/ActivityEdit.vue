@@ -58,7 +58,26 @@ export default {
     };
   },
   methods: {
+    findCountry() {
+      var destinationName = this.activity_dico.destination_name;
+      for (const destination of this.destinations) {
+          if (destinationName === destination.name) {
+            return destination.country;
+          }
+      }
+    },
+    findDest() {
+      var country = this.selected;
+      for (const destination of this.destinations) {
+          if (country === destination.country) {
+            console.log(destination.name);
+            return destination.name;
+          }
+      }
+    },
     populateCountries() {
+      this.selected = this.findCountry();
+      this.boom = this.findDest();
       const mySet = new Set(); 
       this.destinations.forEach(destination => {
         if (!mySet.has(destination.country)) {
@@ -72,6 +91,11 @@ export default {
       this.submitting_form = true;
       const form = document.createElement('form');
       form.setAttribute('method', 'post');
+      this.destinations.forEach(destination => {
+        if (this.boom === destination.name) {
+          this.boom = destination.id;
+        }
+      });
       const form_data = {
         'csrfmiddlewaretoken': this.csrf_token,
         'name': this.activity_dico.name,
@@ -98,13 +122,13 @@ export default {
         }
       });
     },
-    boom(newVal) {
-      this.destinations.forEach(destination => {
-        if (newVal === destination.name) {
-          this.boom = destination.id;
-        }
-      });
-    }
+    // boom(newVal) {
+    //   this.destinations.forEach(destination => {
+    //     if (newVal === destination.name) {
+    //       this.boom = destination.id;
+    //     }
+    //   });
+    // }
   },
 }
 </script>

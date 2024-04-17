@@ -15,10 +15,10 @@ def homepage(request):
 class DestinationListView(LoginRequiredMixin, ListView):
     model = Destination
 
-class DestinationDetailView(DetailView):
+class DestinationDetailView(LoginRequiredMixin, DetailView):
     model = Destination
 
-class DestinationCreateView(CreateView):
+class DestinationCreateView(LoginRequiredMixin, CreateView):
     model = Destination
     fields = ['name', 'country', 'description']
 
@@ -44,7 +44,7 @@ class DestinationCreateView(CreateView):
         return reverse_lazy('locations:destination_detail', args=[self.object.id])
 
 
-class DestinationUpdateView(UpdateView):
+class DestinationUpdateView(LoginRequiredMixin, UpdateView):
     model = Destination
     form_class = DestinationForm
 
@@ -74,7 +74,7 @@ class DestinationUpdateView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('locations:destination_detail', args=[self.object.id])
 
-class DestinationDeleteView(DeleteView):
+class DestinationDeleteView(LoginRequiredMixin, DeleteView):
     model = Destination
     success_url = reverse_lazy('locations:destination_list')
 
@@ -86,13 +86,13 @@ class DestinationDeleteView(DeleteView):
 
 # Accommodations
 
-class AccommodationListView(ListView):
+class AccommodationListView(LoginRequiredMixin, ListView):
     model = Accommodation
 
-class AccommodationDetailView(DetailView):
+class AccommodationDetailView(LoginRequiredMixin, DetailView):
     model = Accommodation
 
-class AccommodationCreateView(CreateView):
+class AccommodationCreateView(LoginRequiredMixin, CreateView):
     model = Accommodation
     fields = ['name', 'destination', 'price_per_night']
 
@@ -118,7 +118,7 @@ class AccommodationCreateView(CreateView):
     def get_success_url(self):
         return reverse_lazy('locations:accommodation_detail', args=[self.object.id])
 
-class AccommodationUpdateView(UpdateView):
+class AccommodationUpdateView(LoginRequiredMixin, UpdateView):
     model = Accommodation
     form_class = AccommodationForm
 
@@ -142,7 +142,7 @@ class AccommodationUpdateView(UpdateView):
         accommodation_dict['country'] = accommodation.destination.country.upper()
 
         context['accommodation_dict'] = accommodation_dict
-        context['destinations'] = list(Destination.objects.all().values('id', 'name'))
+        context['destinations'] = list(Destination.objects.all().values('id', 'name', 'country'))
 
         return context
 
@@ -150,7 +150,7 @@ class AccommodationUpdateView(UpdateView):
         return reverse_lazy('locations:accommodation_detail', args=[self.object.id])
 
 
-class AccommodationDeleteView(DeleteView):
+class AccommodationDeleteView(LoginRequiredMixin, DeleteView):
     model = Accommodation
     success_url = reverse_lazy('locations:accommodation_list')
 
@@ -162,13 +162,13 @@ class AccommodationDeleteView(DeleteView):
 
 # Activities
 
-class ActivityListView(ListView):
+class ActivityListView(LoginRequiredMixin, ListView):
     model = Activity
 
-class ActivityDetailView(DetailView):
+class ActivityDetailView(LoginRequiredMixin, DetailView):
     model = Activity
 
-class ActivityCreateView(CreateView):
+class ActivityCreateView(LoginRequiredMixin, CreateView):
     model = Activity
     form_class = ActivityForm
 
@@ -195,7 +195,7 @@ class ActivityCreateView(CreateView):
     def get_success_url(self):
         return reverse_lazy('locations:activity_detail', args=[self.object.id])
 
-class ActivityUpdateView(UpdateView):
+class ActivityUpdateView(LoginRequiredMixin, UpdateView):
     model = Activity
     form_class = ActivityForm
 
@@ -219,14 +219,14 @@ class ActivityUpdateView(UpdateView):
         activity_dict['country'] = activity.destination.country.upper()
 
         context['activity_dict'] = activity_dict
-        context['destinations'] = list(Destination.objects.all().values('id', 'name'))
+        context['destinations'] = list(Destination.objects.all().values('id', 'name', 'country'))
 
         return context
 
     def get_success_url(self):
         return reverse_lazy('locations:activity_detail', args=[self.object.id])
 
-class ActivityDeleteView(DeleteView):
+class ActivityDeleteView(LoginRequiredMixin, DeleteView):
     model = Activity
     success_url = reverse_lazy('locations:activity_list')
     
