@@ -1,0 +1,17 @@
+4/9, Eric & Tejas, 2:50pm: Created Repo and began setting up our project. Installing packages, virtual environments, etc. 
+
+4/10, Eric & Tejas, 2:50pm: trying to finish user authentication, configuring vue.js and django 
+
+4/12, Eric & Tejas, 2:50pm: Finished user authentication, finished configuring vue.js and django, began setting up urls and views on django
+
+4/14, Tejas, 11:00pm: Finished setting up the Django templates to send the data, views, and models, finished creating the Vue apps to create the forms to submit data into the database. Created the models for the database.
+
+4/15, Eric, 4:00pm: Created NavBar with working links and homepage. Added CSS. Included Bootstrap.
+
+4/16, Eric, 5:00pm: Worked on creating cascading dropdown selection in vue. 
+
+4/17, Eric, 11:00am: Finished making ER diagram.
+
+4/17, Eric & Tejas, 2:10pm: Finished vue form that depends on another vue form. Ran tests and resolved final bugs.
+
+4/17, Tejas, 11:00pm: Fixed the ER diagram and worked on decimal field issues with Django. Final touches on the project.

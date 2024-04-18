@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Edit Activity</h2>
+    <h2>Edit/Create Activity</h2>
     <form @submit.prevent="submit_form" method="post" action="">
       <input type="hidden" name="csrfmiddlewaretoken" :value="csrf_token">
       <p>

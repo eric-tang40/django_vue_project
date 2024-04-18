@@ -63,11 +63,19 @@ class DestinationUpdateView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         destination_dict = model_to_dict(self.object)
         
+        activities = list(self.object.activity_set.all().values('name', 'price'))
+        for activity in activities:
+            activity['price'] = str(activity['price'])
+        
+        accommodations = list(self.object.accommodation_set.all().values('name', 'price_per_night'))
+        for accommodation in accommodations:
+            accommodation['price_per_night'] = str(accommodation['price_per_night'])
+        
         destination_dict['country'] = destination_dict['country'].upper()
         context['destination_dict'] = destination_dict
-        context['activities'] = list(self.object.activity_set.all().values('name', 'price'))
-        context['accommodations'] = list(self.object.accommodation_set.all().values('name', 'price_per_night'))
-
+        context['activities'] = activities
+        context['accommodations'] = accommodations
+        
         print("context", context)
         return context
 
